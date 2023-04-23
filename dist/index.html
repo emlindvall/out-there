@@ -48,9 +48,9 @@
         </form>
       </div>
       <!-- booking destinations carousel -->
-      <section class="splide" aria-label="Destination Selector">
-        <div class="splide__track">
-          <div class="splide__list">
+      <section class="splide" id="destination-splide" aria-label="Destination Selector">
+        <div class="splide__track" id="destination-splide__track">
+          <div class="splide__list" id="destination-splide__list">
           </div>
         </div>
       </section>
@@ -70,23 +70,15 @@
             <h3 class="pending">pending</h3>
             <img class="pending-icon" src="./images/pending-icon.png" alt="pending-icon" height="25px" width="25px">
           </div>
+           <!-- pending details container -->
+           <div class="pending-details-container"></div>
           <!-- pending carousel -->
-          <section class="splide" aria-label="Destination Selector">
-            <div class="splide__track">
-              <div class="splide__list">
+          <section class="splide" id="pending-splide" aria-label="Destination Selector">
+            <div class="splide__track" id="pending-splide__track">
+              <div class="splide__list" id="pending-splide__list">
               </div>
             </div>
           </section>
-          <!-- pending details container -->
-          <div class="pending-details-container">
-            <div class="pending-image"></div>
-            <p class="pending-trip-destination">Destination</p>
-            <p class="pending-trip-date">Start Date</p>
-            <p class="pending-trip-duration">Duration</p>
-            <p class="pending-trip-travelers"># Travelers</p>
-            <p class="pending-trip-id"> Trip ID#</p>
-            <p class="pending-trip-cost">$ Cost</p>
-          </div>
         </div>
         <!-- trips data container -->
         <div class="user-data-container">
@@ -104,21 +96,11 @@
             <h3 class="approved">approved</h3>
           </div>
           <!-- approved carousel -->
-          <section class="splide" aria-label="Approved Trips">
-            <div class="splide__track">
-              <div class="splide__list">
-              </div>
+          <section class="splide" id="approved-splide" aria-label="Approved Trips">
+            <div class="splide__track" id="approved-splide__track">
+              <div class="splide__list" id="approved-splide__list"></div>
             </div>
           </section>
-          <!-- approved details container -->
-          <div class="approved-details-container">
-            <img class="approved-image" src="">
-            <p class="approved-trip-destination">Destination</p>
-            <p class="approved-trip-date">Start Date</p>
-            <p class="approved-trip-duration">Duration</p>
-            <p class="approved-trip-travelers"># Travelers</p>
-            <p class="approved-trip-id"> Trip ID#</p>
-            <p class="approved-trip-cost">$ Cost</p>
         </div>
       </div>
     </div>
