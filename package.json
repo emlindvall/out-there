@@ -28,5 +28,8 @@
     "build": "webpack",
     "test": "mochapack 'test/**/*.js'",
     "lint": "./node_modules/.bin/eslint 'src/**.js' 'test/**.js'"
+  },
+  "dependencies": {
+    "@splidejs/splide": "^4.1.4"
   }
 }
