@@ -3,6 +3,7 @@ import './css/styles.css';
 import '@splidejs/splide/css';
 import apiCalls from '../src/apiCalls';
 import User from '../src/User';
+import Trip from '../src/Trip';
 
 // image imports 
 import './images/out-there-logo.png';
@@ -13,11 +14,6 @@ import './images/2.png';
 import './images/3.png';
 import './images/4.png';
 import './images/5.png';
-import './images/6.png';
-import './images/7.png';
-import './images/8.png';
-import './images/9.png';
-import './images/10.png';
 import './images/departure-icon.png';
 import './images/length-icon.png';
 import './images/party-icon.png';
@@ -28,6 +24,7 @@ import './images/footer-logo.png';
 
 // global variables
 let travelersAPI, tripsAPI, destinationsAPI, user, trip, destination, selectedDestinationID;
+let destinationsToggle = false;
 
 // query selectors
 const bookButton = document.querySelector(".book-button-landing");
@@ -72,7 +69,7 @@ window.addEventListener('load', () => {
       loadDestinationsCarousel();
       getPendingCarousel();
       getConfirmedCarousel();
-      getTripCost();
+      // getTripCost();
       selectDestination();
     })
     .catch(error => console.log(error));
@@ -102,9 +99,9 @@ function loadDestinationsCarousel()  {
     const loadCarousel = destinationsAPI.forEach((cv) =>  {
       let destinationName = cv.destination.split(",")[0];
       let destinationImage = cv.image;
-      console.log(cv.id);
+      // console.log(cv.id);
       // console.log(destinationImage);
-      console.log(destinationName);
+      // console.log(destinationName);
       let newSlide = `
       <div class="splide__slide" id="${cv.id}">
         <img class="destinationImage" id="${cv.id}" src="${destinationImage}">
