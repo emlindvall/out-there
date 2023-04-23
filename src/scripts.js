@@ -1,3 +1,7 @@
+// file imports 
+import './css/styles.css';
+import '@splidejs/splide/css';
+
 // image imports 
 import './images/out-there-logo.png';
 import './images/profile-icon.png';
