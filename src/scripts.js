@@ -32,9 +32,9 @@ const postButton = document.querySelector(".book-button-booking");
 const dateInput = document.querySelector(".date-input");
 const durationInput = document.querySelector(".duration-input");
 const travelersInput = document.querySelector(".travelers-input");
-// const destinationsCarousel = document.querySelector(".splide__list");
 const destinationsCarousel = document.getElementById("destination-splide__list");
 const approvedCarousel = document.getElementById("approved-splide__list");
+const pendingCarousel = document.getElementById("pending-splide__list");
 const approvedImage = document.querySelector(".approved-image");
 const pendingImage = document.querySelector(".pending-image");
 const approvedDestination = document.querySelector(".approved-trip-destination");
@@ -72,6 +72,7 @@ window.addEventListener('load', () => {
       getApprovedCarousel();
       getPendingCarousel();
       selectDestination();
+      mountSplides();
     })
     .catch(error => console.log(error));
 })
@@ -129,15 +130,27 @@ function getPendingCarousel() {
     const loadCarousel = pendingTrips.forEach((cv) =>  {
       trip = new Trip(cv.id, tripsAPI, destinationsAPI);
       let destinationName = destinationsAPI[cv.destinationID - 1].destination;
+      let destinationImageSRC = destinationsAPI[cv.destinationID - 1].image;
       let startDate = dateHelper(cv.date);
       let tripCost = trip.getTripCost(cv.id, tripsAPI, destinationsAPI);
-      pendingDestination.innerHTML = `${destinationName}`;
-      pendingDate.innerHTML = `Depature on ${startDate}`;
-      pendingDuration.innerHTML = `${cv.duration} Days`;
-      pendingTravelers.innerHTML = `${cv.travelers} Travelers`;
-      pendingID.innerHTML = `Trip ID #${cv.id}`
-      pendingCost.innerHTML = `${tripCost}`;
+      let newSlide = `
+        <div class="splide__slide" id="pending-splide__slide">
+          <img class="destinationImage" id="pending-destinationImage" src="${destinationImageSRC}"
+          <p class="destinationName" id="pending-destinationName">${destinationName}</p>
+          <p class="pending-trip-date">Departure on ${startDate}</p>
+          <p class="pending-trip-duration">${cv.duration} Days</p>
+          <p class="pending-trip-travelers">${cv.travelers} Travelers</p>
+          <p class="pending-trip-id">Trip ID #${cv.id}</p>
+          <p class="pending-trip-cost">${tripCost}</p>
+        </div>
+      `
+      pendingCarousel.innerHTML += newSlide;
     })
+    new Splide( '#pending-splide', {
+      type: "loop",
+      perPage: 1,
+      pagination: false
+    }).mount();
   }
 }
 
@@ -147,22 +160,17 @@ function getApprovedCarousel() {
     trip = new Trip(cv.id, tripsAPI, destinationsAPI);
     let destinationName = destinationsAPI[cv.destinationID - 1].destination;
     let destinationImageSRC = destinationsAPI[cv.destinationID - 1].image;
-    console.log(destinationImageSRC);
     let startDate = dateHelper(cv.date);
-    // approvedImage.src="${destinationImage}"
-    // console.log(approvedImage);
-    // console.log(cv);
     let tripCost = trip.getTripCost(cv.id, tripsAPI, destinationsAPI);
-    approvedDestination.innerHTML = `${destinationName}`;
-    approvedDate.innerHTML = `Departure on ${startDate}`;
-    approvedDuration.innerHTML = `${cv.duration} Days`;
-    approvedTravelers.innerHTML = `${cv.travelers} Travelers`;
-    approvedID.innerHTML = `Trip ID #${cv.id}`;
-    approvedCost.innerHTML = `${tripCost}`;
     let newSlide = `
       <div class="splide__slide" id="approved-splide__slide">
         <img class="destinationImage" id="approved-destinationImage" src="${destinationImageSRC}"
         <p class="destinationName" id="approved-destinationName">${destinationName}</p>
+        <p class="approved-trip-date">Departure on ${startDate}</p>
+        <p class="approved-trip-duration">${cv.duration} Days</p>
+        <p class="approved-trip-travelers">${cv.travelers} Travelers</p>
+        <p class="approved-trip-id">Trip ID #${cv.id}</p>
+        <p class="approved-trip-cost">${tripCost}</p>
       </div>
       `
       approvedCarousel.innerHTML += newSlide;
