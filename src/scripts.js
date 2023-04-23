@@ -1,6 +1,7 @@
 // file imports 
 import './css/styles.css';
 import '@splidejs/splide/css';
+import apiCalls from '../src/apiCalls';
 
 // image imports 
 import './images/out-there-logo.png';
@@ -23,3 +24,24 @@ import './images/pending-icon.png';
 import './images/confirmed-icon.png';
 import './images/luggage-icon.png';
 import './images/footer-logo.png';
+
+// global variables
+
+// event listeners
+
+// functions
+window.addEventListener('load', () => {
+  Promise.all(apiCalls).then((callsArray) => {
+      travelersAPI = callsArray[0].travelers;
+      destinationsAPI = callsArray[1].destinations;
+      tripsAPI = callsArray[2].trips;
+      getRandomIndex();
+      getUser();
+      loadDestinationsCarousel();
+      getPendingCarousel();
+      getConfirmedCarousel();
+      getTripCost();
+      selectDestination();
+    })
+    .catch(error => console.log(error));
+})
