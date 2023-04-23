@@ -1,3 +1,362 @@
-body {
-  background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%);
+/* 
+chartreuse #C7C32E
+yellow #EBE94E
+hover blue #3275EA
+medium blue #4F8FFD
+light blue #D3E3F3
+off-white #F1F1F1
+gray #B3B3B3
+dark gray #292929
+medium green #00887A
+light green #2CC299
+ */
+
+ *   { 
+  font-family: 'Public Sans', sans-serif;
+  /* border: 1px red solid; */
+}
+
+body, html {
+  margin: 0px;
+  background-color: #FFFFFF;
+  font-weight: thin;
+  font-size: 14px;
+  color: #292929;
+  text-align: center;
+}
+
+/* nav */
+.nav-container  {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 50px;
+}
+
+.profile-container  {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.profile-icon {
+  padding-right: 5px;
+  cursor: pointer;
+}
+
+.sign-in  {
+  cursor: pointer;
+}
+
+/* landing page */
+.display-container  {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.landing-container  {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 5%;
+  width: 100vw;
+  height: 500px;
+}
+
+.slogan {
+  margin-bottom: 0px;
+  font-family: Syne;
+  font-size: 7vw;
+  color: #EBE94E;
+}
+
+.tagline  {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: 1.75vw;
+  font-weight: 200;
+  color: #F1F1F1;
+}
+
+.book-button-landing  {
+  margin-top: 15px;
+  padding-top: 10px;
+  padding-right: 50px;
+  padding-bottom: 10px;
+  padding-left: 50px;
+  background-color: #4F8FFD;
+  border: none;
+  border-radius: 15px;
+  font-size: 1vw;
+  font-weight: 200;
+  color: #F1F1F1;
+  cursor: pointer;
+}
+
+.book-button-landing:hover  {
+  background-color: #3275EA;
+}
+
+/* booking container */
+.booking-container  {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2.5%;
+  width: 100vw;
+}
+
+.booking-header-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: baseline;
+  margin-top: 5%;
+}
+
+/* booking form */
+.booking-form-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+}
+
+.get-out-there {
+  font-size: 3vw;
+}
+
+#date {
+  cursor: pointer;
+}
+
+#duration, #travelers {
+  cursor: text;
+}
+
+#date, #duration, #travelers {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 15px 4px #0000000F;
+}
+
+/* destination carousel */
+.splide {
+  margin-top: 2.5%;
+  height: 240px;
+}
+
+.splide__track  {
+  height: fit-content;
+  width: 90vw;
+}
+
+.splide__slide  {
+  position: relative;
+  height: 300px;
+  text-align: center;
+}
+
+.destinationImage {
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
+  cursor: pointer;
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+}
+
+.destinationImage:hover {
+  -webkit-filter: grayscale(0);
+  filter: grayscale(0);
+}
+
+.destinationName {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: Syne;
+  font-size: 30px;
+  color: #EBE94E;
+  user-select: none;
+}
+
+.selected-destination {
+  padding-top: 10px;
+  padding-bottom: 5.5px;
+}
+
+/* post button */
+.book-button-booking  {
+  padding-top: 10px;
+  padding-right: 50px;
+  padding-bottom: 10px;
+  padding-left: 50px;
+  background-color: #4F8FFD;
+  border: none;
+  border-radius: 15px;
+  font-size: 1vw;
+  font-weight: 200;
+  color: #F1F1F1;
+  cursor: pointer;
+}
+
+.book-button-booking:hover  {
+  background-color: #3275EA;
+}
+
+/* trips container */
+.trips-container  {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 8%;
+}
+
+.trips-header-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: baseline;
+  width: 100vw;
+}
+
+.trips-header {
+  font-size: 3vw;
+}
+
+.pending-approved-trips  {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+/* pending+ approved trip containers */
+.pending-trips-container, .approved-trips-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.pending-trips-container, .approved-trips-container  {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 315px;
+  margin: 2%;
+  padding-top: 20px;
+  padding-left: 5px;
+  padding-bottom: 10px;
+  padding-right: 5px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 15px 4px #0000000F;
+}
+
+.pending-header-container, .approved-header-container  {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.5vw;
+}
+
+.pending, .approved, .pending-icon, .approved-icon {
+  margin: 0px
+}
+
+.pending-details-container, .approved-details-container  {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.pending-trip-destination, .approved-trip-destination {
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 2.5px;
+}
+
+.pending-trip-date, .approved-trip-date, .pending-trip-duration, .approved-trip-duration, .pending-trip-travelers, .approved-trip-travelers, .pending-trip-duration, .approved-trip-duration, .pending-trip-id, .approved-trip-id, .pending-trip-cost, .approved-trip-cost {
+  font-weight: thin;
+  margin: 2.5px;
+}
+
+/* user data container */
+.user-data-container  {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 315px;
+  margin: 2%;
+  padding-right: 5px;
+  padding-left: 5px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 15px 4px #0000000F;
+}
+
+.data   {
+  font-size: 1.75vw;
+  margin-bottom: 10px;
+}
+
+.welcome {
+  /* margin-top: 10px; */
+  margin-bottom: 0px;
+  font-weight: bold;
+}
+
+.approved-sum, .pending-sum, .spent-sum {
+  margin-top: 7px;
+  margin-bottom: 0px;
+  font-weight: thin;
+}
+
+/* .luggage-icon {
+  padding-top: 20px;
+} */
+
+/* footer */
+.footer   {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.quote {
+  margin-top: 150px;
+  margin-bottom: 0px;
+  font-size: 1vw;
+  font-weight: 200;
+  font-style: italic;
+}
+
+.quote-attribution {
+  margin-top: 5px;
+  font-size: .75vw;
+  font-weight: 200;
+}
+
+.footer-logo  {
+  margin-top: 40px;
+  margin-bottom: 25px;
+  text-align: center;
 }
