@@ -150,17 +150,19 @@ body, html {
 }
 
 /* destination carousel */
-.splide {
+/* .splide { */
+#destination-splide, #approved-splide {
   margin-top: 2.5%;
   height: 240px;
 }
 
-.splide__track  {
+/* .splide__track  { */
+#destination-splide__track, #approved-splide__track {
   height: fit-content;
   width: 90vw;
 }
 
-.splide__slide  {
+.splide__slide, #approved-splide__slide  {
   position: relative;
   height: 300px;
   text-align: center;
@@ -242,7 +244,7 @@ body, html {
   justify-content: flex-start;
 }
 
-/* pending+ approved trip containers */
+/* pending + approved trip containers */
 .pending-trips-container, .approved-trips-container {
   display: flex;
   flex-direction: column;

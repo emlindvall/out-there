@@ -32,7 +32,9 @@ const postButton = document.querySelector(".book-button-booking");
 const dateInput = document.querySelector(".date-input");
 const durationInput = document.querySelector(".duration-input");
 const travelersInput = document.querySelector(".travelers-input");
-const destinationsCarousel = document.querySelector(".splide__list");
+// const destinationsCarousel = document.querySelector(".splide__list");
+const destinationsCarousel = document.getElementById("destination-splide__list");
+const approvedCarousel = document.getElementById("approved-splide__list");
 const approvedImage = document.querySelector(".approved-image");
 const pendingImage = document.querySelector(".pending-image");
 const approvedDestination = document.querySelector(".approved-trip-destination");
@@ -67,9 +69,8 @@ window.addEventListener('load', () => {
       getRandomIndex();
       getUser();
       loadDestinationsCarousel();
+      getApprovedCarousel();
       getPendingCarousel();
-      getConfirmedCarousel();
-      // getTripCost();
       selectDestination();
     })
     .catch(error => console.log(error));
@@ -103,14 +104,14 @@ function loadDestinationsCarousel()  {
       // console.log(destinationImage);
       // console.log(destinationName);
       let newSlide = `
-      <div class="splide__slide" id="${cv.id}">
+      <div class="splide__slide" id="destination-splide__slide">
         <img class="destinationImage" id="${cv.id}" src="${destinationImage}">
         <p class="destinationName" id="${cv.id}" inert="true">${destinationName}</p>
       </div>
       `
       destinationsCarousel.innerHTML += newSlide;
     })
-    new Splide( '.splide', {
+    new Splide( '#destination-splide', {
       type: "loop",
       gap: 10,
       perPage: 5,
@@ -140,13 +141,13 @@ function getPendingCarousel() {
   }
 }
 
-function getConfirmedCarousel() {
+function getApprovedCarousel() {
   let approvedTrips = user.getApproved(tripsAPI, destinationsAPI);
   const loadCarousel = approvedTrips.forEach((cv) =>  {
     trip = new Trip(cv.id, tripsAPI, destinationsAPI);
     let destinationName = destinationsAPI[cv.destinationID - 1].destination;
     let destinationImageSRC = destinationsAPI[cv.destinationID - 1].image;
-    // console.log(destinationImageSRC);
+    console.log(destinationImageSRC);
     let startDate = dateHelper(cv.date);
     // approvedImage.src="${destinationImage}"
     // console.log(approvedImage);
@@ -158,21 +159,19 @@ function getConfirmedCarousel() {
     approvedTravelers.innerHTML = `${cv.travelers} Travelers`;
     approvedID.innerHTML = `Trip ID #${cv.id}`;
     approvedCost.innerHTML = `${tripCost}`;
-  //   let newSlide = `
-  //     <div class="splide__slide" id="${cv.id}">
-  //       <img class="destinationImage" src="${destinationImage}"
-  //       <p class="destinationName">${destinationName}</p>
-  //     </div>
-  //     `
-  //     destinationsCarousel.innerHTML += newSlide;
-  //   })
-  //   new Splide( '.splide', {
-  //     type: "loop",
-  //     gap: 10,
-  //     perPage: 5,
-  //     pagination: false
-  //   }).mount();
-  })
+    let newSlide = `
+      <div class="splide__slide" id="approved-splide__slide">
+        <img class="destinationImage" id="approved-destinationImage" src="${destinationImageSRC}"
+        <p class="destinationName" id="approved-destinationName">${destinationName}</p>
+      </div>
+      `
+      approvedCarousel.innerHTML += newSlide;
+    })
+    new Splide( '#approved-splide', {
+      type: "loop",
+      perPage: 1,
+      pagination: false
+    }).mount();
 }
 
 function selectDestination() {
