@@ -1,26 +1,13 @@
-/* 
-chartreuse #C7C32E
-yellow #EBE94E
-hover blue #3275EA
-medium blue #4F8FFD
-light blue #D3E3F3
-off-white #F1F1F1
-gray #B3B3B3
-dark gray #292929
-medium green #00887A
-light green #2CC299
- */
-
- *   { 
+/* global */
+*   { 
   font-family: 'Public Sans', sans-serif;
-  /* border: 1px red solid; */
 }
 
 body, html {
   margin: 0px;
   background-color: #FFFFFF;
-  font-weight: thin;
-  font-size: 14px;
+  font-weight: 100;
+  font-size: 13px;
   color: #292929;
   text-align: center;
 }
