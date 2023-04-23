@@ -14,3 +14,140 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Syne:wght@700&display=swap" rel="stylesheet">
+  <title>The world is out there</title>
+</head>
+<body>
+  <!-- nav -->
+  <nav class="nav-container">
+    <img class="out-there-logo" src="./images/out-there-logo.png" alt="out-there-logo" height="15px" width="75px">
+    <div class="profile-container">
+      <img class="profile-icon" src="./images/profile-icon.png" alt="profile-icon" height="25px" width="25px">
+      <p class="sign-in">Sign in</p>
+    </div>
+  </nav>
+  <!-- display -->
+  <main class="display-container">
+    <!-- landing area -->
+    <div class="landing-container">
+      <style>
+        .landing-container {
+        background-image: url('./images/8.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+      </style>
+      <h1 class="slogan">the world is out there</h1>
+      <p class="tagline">Your next adventure is on us.</p> 
+      <button class="book-button-landing">BOOK A TRIP</button> 
+    </div>
+    <!-- booking container -->
+    <!-- booking header -->
+    <div class="booking-container">
+      <div class="booking-header-container">
+        <img class="pin-icon" src="./images/pin-icon.png" alt="pin-icon" height="50px" width="50px">
+        <h1 class="get-out-there">get out there</h1>
+      </div>
+      <!-- booking forms -->
+      <div class="booking-form-container">
+        <form class="departure-form">
+          <input type="date" class="date-input" id="date" name="date" placeholder="Date of departure">
+        </form>
+        <form class="duration-form">
+          <input type="number" class="duration-input" id="duration" name="duration" placeholder="Duration of trip">
+        </form>
+        <form class="travelers-form">
+          <input type="number" class="travelers-input" id="travelers" name="travelers" placeholder="Travelers in party">
+        </form>
+      </div>
+      <!-- booking destinations carousel -->
+      <section class="splide" aria-label="Destination Selector">
+        <div class="splide__track">
+          <div class="splide__list">
+          </div>
+        </div>
+      </section>
+      <p class="selected-destination">Where would you like to go?</p>
+      <button class="book-button-booking">LET'S GO</button>
+    <!-- trips container -->
+    <!-- trips header -->
+    <div class="trips-container">
+      <div class="trips-header-container">
+        <img class="pin-icon" src="./images/pin-icon.png" alt="pin-icon" height="50px" width="50px">
+        <h1 class="trips-header">your trips</h1>
+      </div>
+      <div class="pending-approved-trips">
+        <!-- pending trips -->
+        <div class="pending-trips-container">
+          <div class="pending-header-container">
+            <h3 class="pending">pending</h3>
+            <img class="pending-icon" src="./images/pending-icon.png" alt="pending-icon" height="25px" width="25px">
+          </div>
+          <!-- pending carousel -->
+          <section class="splide" aria-label="Destination Selector">
+            <div class="splide__track">
+              <div class="splide__list">
+              </div>
+            </div>
+          </section>
+          <!-- pending details container -->
+          <div class="pending-details-container">
+            <div class="pending-image"></div>
+            <p class="pending-trip-destination">Destination</p>
+            <p class="pending-trip-date">Start Date</p>
+            <p class="pending-trip-duration">Duration</p>
+            <p class="pending-trip-travelers"># Travelers</p>
+            <p class="pending-trip-id"> Trip ID#</p>
+            <p class="pending-trip-cost">$ Cost</p>
+          </div>
+        </div>
+        <!-- trips data container -->
+        <div class="user-data-container">
+          <h3 class="data">your data</h3>
+          <p class="welcome"></p>
+          <p class="approved-sum"></p>
+          <p class="pending-sum"></p>
+          <p class="spent-sum"></p>
+          <!-- <img class="luggage-icon" src="./images/luggage-icon.png" alt="luggage-icon" height="27px" width="27px"> -->
+        </div>
+        <!-- approved trips -->
+        <div class="approved-trips-container">
+          <div class="approved-header-container">
+            <img class="approved-icon" src="./images/confirmed-icon.png" alt="confirmed-icon" height="25px" width="25px">
+            <h3 class="approved">approved</h3>
+          </div>
+          <!-- approved carousel -->
+          <section class="splide" aria-label="Approved Trips">
+            <div class="splide__track">
+              <div class="splide__list">
+              </div>
+            </div>
+          </section>
+          <!-- approved details container -->
+          <div class="approved-details-container">
+            <img class="approved-image" src="">
+            <p class="approved-trip-destination">Destination</p>
+            <p class="approved-trip-date">Start Date</p>
+            <p class="approved-trip-duration">Duration</p>
+            <p class="approved-trip-travelers"># Travelers</p>
+            <p class="approved-trip-id"> Trip ID#</p>
+            <p class="approved-trip-cost">$ Cost</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p class="quote">“The world isn't in your books and maps, it's out there.”</p>
+      <p class="quote-attribution">-  Gandalf</p>
+      <img class="footer-logo" src="./images/footer-logo.png" alt="confirmed-icon" height="25px" width="100px">
+    </div>
+  </main>
+  <script src="bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+</body>
+</html>
