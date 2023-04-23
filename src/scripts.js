@@ -23,38 +23,27 @@ import './images/luggage-icon.png';
 import './images/footer-logo.png';
 
 // global variables
-let travelersAPI, tripsAPI, destinationsAPI, user, trip, destination, selectedDestinationID;
+let travelersAPI, tripsAPI, destinationsAPI, user, trip, selectedDestinationID;
 let destinationsToggle = false;
 
 // query selectors
 const bookButton = document.querySelector(".book-button-landing");
 const postButton = document.querySelector(".book-button-booking");
-const dateInput = document.querySelector(".date-input");
-const durationInput = document.querySelector(".duration-input");
-const travelersInput = document.querySelector(".travelers-input");
+const dateInput = document.getElementById("date");
+const durationInput = document.getElementById("duration");
+const travelersInput = document.getElementById("travelers");
+const locationInput = document.getElementById("location");
 const destinationsCarousel = document.getElementById("destination-splide__list");
 const approvedCarousel = document.getElementById("approved-splide__list");
 const pendingCarousel = document.getElementById("pending-splide__list");
-const approvedImage = document.querySelector(".approved-image");
-const pendingImage = document.querySelector(".pending-image");
-const approvedDestination = document.querySelector(".approved-trip-destination");
-const pendingDestination = document.querySelector(".pending-trip-destination");
-const approvedDate = document.querySelector(".approved-trip-date");
-const pendingDate = document.querySelector(".pending-trip-date");
-const approvedDuration = document.querySelector(".approved-trip-duration");
-const pendingDuration = document.querySelector(".pending-trip-duration");
-const approvedTravelers = document.querySelector(".approved-trip-travelers");
-const pendingTravelers = document.querySelector(".pending-trip-travelers");
-const approvedID = document.querySelector(".approved-trip-id");
-const pendingID = document.querySelector(".pending-trip-id");
-const approvedCost = document.querySelector(".approved-trip-cost");
-const pendingCost = document.querySelector(".pending-trip-cost");
 const pendingDetails = document.querySelector(".pending-details-container");
 const welcome = document.querySelector(".welcome");
 const approvedSum = document.querySelector(".approved-sum");
 const pendingSum = document.querySelector(".pending-sum");
 const spentSum = document.querySelector(".spent-sum");
 const selectedDestination = document.querySelector(".selected-destination");
+const costEstimate = document.querySelector(".cost-estimate");
+const formFields = document.getElementsByClassName("form-field");
 
 // event listeners
 postButton.addEventListener("click", postTrip);
@@ -62,10 +51,10 @@ destinationsCarousel.addEventListener("dblclick", selectDestination);
 
 // functions
 window.addEventListener('load', () => {
-  Promise.all(apiCalls).then((callsArray) => {
-      travelersAPI = callsArray[0].travelers;
-      destinationsAPI = callsArray[1].destinations;
-      tripsAPI = callsArray[2].trips;
+  Promise.all(apiCalls).then((cv) => {
+      travelersAPI = cv[0].travelers;
+      destinationsAPI = cv[1].destinations;
+      tripsAPI = cv[2].trips;
       getRandomIndex();
       getUser();
       loadDestinationsCarousel();
@@ -81,11 +70,19 @@ function getRandomIndex() {
   return Math.floor(Math.random() * travelersAPI.length);
 }
 
-function dateHelper(date) {
+function dateHelperDOM(date) {
   let mm = date.slice(5,7);
   let dd = date.slice(8,10)
   let yyyy = date.slice(0, 4);
   let formattedDate = `${mm}/${dd}/${yyyy}`;
+  return formattedDate;
+}
+
+function dateHelperPost(date) {
+  let mm = date.slice(5,7);
+  let dd = date.slice(8,10)
+  let yyyy = date.slice(0, 4);
+  let formattedDate = `${yyyy}/${mm}/${dd}`;
   return formattedDate;
 }
 
@@ -101,9 +98,6 @@ function loadDestinationsCarousel()  {
     const loadCarousel = destinationsAPI.forEach((cv) =>  {
       let destinationName = cv.destination.split(",")[0];
       let destinationImage = cv.image;
-      // console.log(cv.id);
-      // console.log(destinationImage);
-      // console.log(destinationName);
       let newSlide = `
       <div class="splide__slide" id="destination-splide__slide">
         <img class="destinationImage" id="${cv.id}" src="${destinationImage}">
@@ -121,7 +115,7 @@ function loadDestinationsCarousel()  {
 }
 
 function getPendingCarousel() {
-  let pendingTrips = user.getPending(tripsAPI, destinationsAPI);
+  let pendingTrips = user.getPending(tripsAPI);
   if (pendingTrips.length === 0)  {
     pendingDetails.innerHTML = `
     <p>You have no pending trips at this time.</p>
@@ -131,7 +125,7 @@ function getPendingCarousel() {
       trip = new Trip(cv.id, tripsAPI, destinationsAPI);
       let destinationName = destinationsAPI[cv.destinationID - 1].destination;
       let destinationImageSRC = destinationsAPI[cv.destinationID - 1].image;
-      let startDate = dateHelper(cv.date);
+      let startDate = dateHelperDOM(cv.date);
       let tripCost = trip.getTripCost(cv.id, tripsAPI, destinationsAPI);
       let newSlide = `
         <div class="splide__slide" id="pending-splide__slide">
@@ -160,7 +154,7 @@ function getApprovedCarousel() {
     trip = new Trip(cv.id, tripsAPI, destinationsAPI);
     let destinationName = destinationsAPI[cv.destinationID - 1].destination;
     let destinationImageSRC = destinationsAPI[cv.destinationID - 1].image;
-    let startDate = dateHelper(cv.date);
+    let startDate = dateHelperDOM(cv.date);
     let tripCost = trip.getTripCost(cv.id, tripsAPI, destinationsAPI);
     let newSlide = `
       <div class="splide__slide" id="approved-splide__slide">
@@ -187,11 +181,12 @@ function selectDestination() {
     if (destinationsToggle === false) {
       selectedDestinationID = event.target.id;
       destinationsToggle = true;
+      locationInput.value = selectedDestinationID;
       event.target.style.border = "3px solid #4F8FFD";
       event.target.style.filter = "grayscale(0)";
       let destinationIndex = [JSON.parse(selectedDestinationID) - 1];
-      console.log(destinationsAPI[destinationIndex].destination);
       selectedDestination.innerText = `${destinationsAPI[destinationIndex].destination}`;
+      displayCostEstimate();
     } else if (destinationsToggle === true)  {
       selectedDestinationID = "";
       destinationsToggle = false;
@@ -201,42 +196,41 @@ function selectDestination() {
   }
 }
 
+function getCostEstimate()  {
+  let duration = durationInput.value;
+  let travelers = travelersInput.value;
+  let costLodging = ((destinationsAPI[selectedDestinationID - 1].estimatedLodgingCostPerDay) * travelers) * duration;
+  let costFlight = (destinationsAPI[selectedDestinationID - 1].estimatedFlightCostPerPerson) * travelers;
+  let unformatted = ((costLodging + costFlight) + ((costLodging + costFlight) * 0.10));
+  let price = `$${unformatted.toLocaleString("en")}`;
+  return price;
+}
+
+function displayCostEstimate()  {
+  let inputCounter = 0;
+  if (formFields.length > 0)  {
+    const checkForInput = Array.from(formFields).forEach((cv) => {
+      if (cv.value) {
+        inputCounter = (inputCounter + 1);
+      }
+      if (inputCounter === 4) {
+        costEstimate.style.display = "inline";
+        costEstimate.innerText = `The estimated overall cost for this trip is ${getCostEstimate()}`;
+      }
+    })
+  }
+}
+
 function postTrip() {
-  // console.log(dateHelper(dateInput.value));
-  // console.log(durationInput.value);
-  // console.log(travelersInput.value);
-  let date = dateInput.value
-  let mm = date.slice(5,7);
-  let dd = date.slice(8,10)
-  let yyyy = date.slice(0, 4);
-  let tripDate = `${yyyy}/${mm}/${dd}`;
-  console.log(tripDate);
-
-  console.log("duration")
-  let tripDuration = durationInput.value
-  console.log(tripDuration);
-
-  console.log("travelers")
-  let tripTrav = travelersInput.value
-  console.log(tripTrav);
-
-  console.log("desination id")
-  let tripDest = Number(selectedDestinationID)
-  console.log(tripDest);
-
-  console.log("current user")
-  let currentUser = user.userID
-  console.log(currentUser)
-
-  console.log("status")
-  let tripStat = "pending"
-  console.log(tripStat)
-
-  console.log("biggest id")
-  let idPlusOne = tripsAPI.length + 1
-  console.log(idPlusOne)
-
-  console.log(tripsAPI.length)
+  event.preventDefault();
+  let date = dateInput.value;
+  let tripDate = dateHelperPost(date);
+  let tripDuration = durationInput.value;
+  let tripTrav = travelersInput.value;
+  let tripDest = Number(selectedDestinationID);
+  let currentUser = user.userID;
+  let tripStat = "pending";
+  let idPlusOne = (tripsAPI.length + 1);
   if (!dateInput.value || !durationInput.value || !travelersInput.value || selectedDestinationID === "") {
     window.alert("Whoa, hold up! We're missing something. Please select a destination, date of departure, duration of your trip, and number of travelers in your party.");
   } else if (destinationsToggle === false) {
@@ -263,99 +257,26 @@ function postTrip() {
               }
         })
         .then(response => response.json())
+        .then(fetchTripsAPI())
         .then(getPendingCarousel())
-        .catch(Error => window.alert('Server Error... Try again later!'), Error);
+        .catch(Error => 'Server Error... Try again later!');
       }
-    console.log(tripsAPI.length)
     }
-  //   fetch('http://localhost:3001/api/v1/activity', {
-  //     method: 'POST',
-  //     body: JSON.stringify({userID: parseInt(`${user.id}`), date: `${userInputDate.value}`, flightsOfStairs: 0, minutesActive: 0, numSteps: `${userInputSteps.value}`}),
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //     .then(postVerification.innerText = `You logged ${userInputSteps.value} steps on ${userInputDate.value}. Great Job!`)
-  //     .then(postVerification.style.visibility = "visible")
-  //     .then(response => response.json())
-  //     .then(json => console.log(json))
-  //     .catch(Error => window.alert('Server Error...Try Again later!'), Error);
-  //     userInputDate.value = ''
-  //     userInputSteps.value = ''
-  //   }
-    // console.log("wip");
-    // console.log(selectedDestinationID);
 
 
-
-// function postTrip() {
-//   console.log("date")
-//   let date = dateInput.value
-//   let mm = date.slice(5,7);
-//   let dd = date.slice(8,10)
-//   let yyyy = date.slice(0, 4);
-//   let tripDate = `${yyyy}/${mm}/${dd}`;
-//   //let tripDate = dateHelper(dateInput.value)
-//   console.log(tripDate);
-
-//   console.log("duration")
-//   let tripDuration = durationInput.value
-//   console.log(tripDuration);
-
-//   console.log("travelers")
-//   let tripTrav = travelersInput.value
-//   console.log(tripTrav);
-
-//   console.log("desination id")
-//   let tripDest = Number(selectedDestinationID)
-//   console.log(tripDest);
-
-//   console.log("current user")
-//   let currentUser = user.userID
-//   console.log(currentUser)
-
-//   console.log("status")
-//   let tripStat = "pending"
-//   console.log(tripStat)
-
-//   console.log("biggest id")
-//   let idPlusOne = tripsAPI.length + 1
-//   console.log(idPlusOne)
-
-//   console.log(tripsAPI.length)
-
-
-//   if (!dateInput.value || !durationInput.value || !travelersInput.value || selectedDestinationID === "") {
-//     window.alert("Whoa, hold up! We're missing something. Please select a destination, date of departure, duration of your trip, and the number of travelers in your party.");
-//   } else if (destinationsToggle === false) {
-//   window.alert("You didn't tell us where you're going! Double-click your desintation to select it.");
-//   } else if (durationInput.value < 1)  {
-//     window.alert("Hmmm, something's wrong here. Your trip duration must be a minimum of 1 day.");
-//   } else if (travelersInput.value < 1)  {
-//     window.alert("Hmmm, something's wrong here. You must book tickets for a minimum of 1 traveler.");
-//   } else  {
-//       fetch('http://localhost:3001/api/v1/trips', {
-//         method: 'POST',
-//         body: JSON.stringify(
-//             {id: idPlusOne , 
-//               userID: currentUser, 
-//               destinationID: tripDest, 
-//               travelers: tripTrav, 
-//               date: tripDate, 
-//               duration: tripDuration, 
-//               status: tripStat,
-//               suggestedActivities: [] }
-//               ),
-//               headers: {
-//                 'Content-Type': 'application/json'
-//               }
-//         })
-//         .then(response => response.json())
-//         .then(getPendingCarousel())
-//         //.then(json => console.log(json))
-//         // need to call the API again to get all the new data
-//         // also throws and error on with an undefined destination id in the getPending? 
-//         .catch(Error => window.alert('Server Error... Try again later!'), Error);
-//     }
-//   console.log(tripsAPI.length)
-//   }
+function fetchTripsAPI()  {
+  let tripsPromise = fetch("http://localhost:3001/api/v1/trips")
+    .then(response => response.json())
+    .catch(error => console.log(error));
+  Promise.resolve(tripsPromise).then(
+    (value) => {
+      console.log(value.trips)
+      tripsAPI = value.trips
+    },
+    (reason) => {
+    }
+  );
+  console.log("in fetchTripsAPI")
+  console.log(tripsAPI);
+  return tripsAPI;
+}

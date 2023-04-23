@@ -38,13 +38,16 @@
       <!-- booking forms -->
       <div class="booking-form-container">
         <form class="departure-form">
-          <input type="date" class="date-input" id="date" name="date" placeholder="Date of departure">
+          <input type="date" class="form-field" id="date" name="date" placeholder="Date of departure">
         </form>
         <form class="duration-form">
-          <input type="number" class="duration-input" id="duration" name="duration" placeholder="Duration of trip">
+          <input type="number" class="form-field" id="duration" name="duration" placeholder="Duration of trip">
         </form>
         <form class="travelers-form">
-          <input type="number" class="travelers-input" id="travelers" name="travelers" placeholder="Travelers in party">
+          <input type="number" class="form-field" id="travelers" name="travelers" placeholder="Travelers in party">
+        </form>
+        <form class="location-form">
+          <input type="number" class="form-field" id="location" name="location" hidden>
         </form>
       </div>
       <!-- booking destinations carousel -->
@@ -55,6 +58,7 @@
         </div>
       </section>
       <p class="selected-destination">Where would you like to go?</p>
+      <p class="cost-estimate" hidden></p>
       <button class="book-button-booking">LET'S GO</button>
     <!-- trips container -->
     <!-- trips header -->
