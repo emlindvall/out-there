@@ -205,6 +205,38 @@ function postTrip() {
   // console.log(dateHelper(dateInput.value));
   // console.log(durationInput.value);
   // console.log(travelersInput.value);
+  let date = dateInput.value
+  let mm = date.slice(5,7);
+  let dd = date.slice(8,10)
+  let yyyy = date.slice(0, 4);
+  let tripDate = `${yyyy}/${mm}/${dd}`;
+  console.log(tripDate);
+
+  console.log("duration")
+  let tripDuration = durationInput.value
+  console.log(tripDuration);
+
+  console.log("travelers")
+  let tripTrav = travelersInput.value
+  console.log(tripTrav);
+
+  console.log("desination id")
+  let tripDest = Number(selectedDestinationID)
+  console.log(tripDest);
+
+  console.log("current user")
+  let currentUser = user.userID
+  console.log(currentUser)
+
+  console.log("status")
+  let tripStat = "pending"
+  console.log(tripStat)
+
+  console.log("biggest id")
+  let idPlusOne = tripsAPI.length + 1
+  console.log(idPlusOne)
+
+  console.log(tripsAPI.length)
   if (!dateInput.value || !durationInput.value || !travelersInput.value || selectedDestinationID === "") {
     window.alert("Whoa, hold up! We're missing something. Please select a destination, date of departure, duration of your trip, and number of travelers in your party.");
   } else if (destinationsToggle === false) {
@@ -214,6 +246,28 @@ function postTrip() {
   } else if (travelersInput.value < 1)  {
     window.alert("Hmmm, something's wrong here. You must book tickets for a minimum of 1 traveler.");
   } else  {
+    fetch('http://localhost:3001/api/v1/trips', {
+        method: 'POST',
+        body: JSON.stringify(
+            {id: idPlusOne , 
+              userID: currentUser, 
+              destinationID: tripDest, 
+              travelers: tripTrav, 
+              date: tripDate, 
+              duration: tripDuration, 
+              status: tripStat,
+              suggestedActivities: [] }
+              ),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+        })
+        .then(response => response.json())
+        .then(getPendingCarousel())
+        .catch(Error => window.alert('Server Error... Try again later!'), Error);
+      }
+    console.log(tripsAPI.length)
+    }
   //   fetch('http://localhost:3001/api/v1/activity', {
   //     method: 'POST',
   //     body: JSON.stringify({userID: parseInt(`${user.id}`), date: `${userInputDate.value}`, flightsOfStairs: 0, minutesActive: 0, numSteps: `${userInputSteps.value}`}),
@@ -231,5 +285,77 @@ function postTrip() {
   //   }
     // console.log("wip");
     // console.log(selectedDestinationID);
-  }
-}
+
+
+
+// function postTrip() {
+//   console.log("date")
+//   let date = dateInput.value
+//   let mm = date.slice(5,7);
+//   let dd = date.slice(8,10)
+//   let yyyy = date.slice(0, 4);
+//   let tripDate = `${yyyy}/${mm}/${dd}`;
+//   //let tripDate = dateHelper(dateInput.value)
+//   console.log(tripDate);
+
+//   console.log("duration")
+//   let tripDuration = durationInput.value
+//   console.log(tripDuration);
+
+//   console.log("travelers")
+//   let tripTrav = travelersInput.value
+//   console.log(tripTrav);
+
+//   console.log("desination id")
+//   let tripDest = Number(selectedDestinationID)
+//   console.log(tripDest);
+
+//   console.log("current user")
+//   let currentUser = user.userID
+//   console.log(currentUser)
+
+//   console.log("status")
+//   let tripStat = "pending"
+//   console.log(tripStat)
+
+//   console.log("biggest id")
+//   let idPlusOne = tripsAPI.length + 1
+//   console.log(idPlusOne)
+
+//   console.log(tripsAPI.length)
+
+
+//   if (!dateInput.value || !durationInput.value || !travelersInput.value || selectedDestinationID === "") {
+//     window.alert("Whoa, hold up! We're missing something. Please select a destination, date of departure, duration of your trip, and the number of travelers in your party.");
+//   } else if (destinationsToggle === false) {
+//   window.alert("You didn't tell us where you're going! Double-click your desintation to select it.");
+//   } else if (durationInput.value < 1)  {
+//     window.alert("Hmmm, something's wrong here. Your trip duration must be a minimum of 1 day.");
+//   } else if (travelersInput.value < 1)  {
+//     window.alert("Hmmm, something's wrong here. You must book tickets for a minimum of 1 traveler.");
+//   } else  {
+//       fetch('http://localhost:3001/api/v1/trips', {
+//         method: 'POST',
+//         body: JSON.stringify(
+//             {id: idPlusOne , 
+//               userID: currentUser, 
+//               destinationID: tripDest, 
+//               travelers: tripTrav, 
+//               date: tripDate, 
+//               duration: tripDuration, 
+//               status: tripStat,
+//               suggestedActivities: [] }
+//               ),
+//               headers: {
+//                 'Content-Type': 'application/json'
+//               }
+//         })
+//         .then(response => response.json())
+//         .then(getPendingCarousel())
+//         //.then(json => console.log(json))
+//         // need to call the API again to get all the new data
+//         // also throws and error on with an undefined destination id in the getPending? 
+//         .catch(Error => window.alert('Server Error... Try again later!'), Error);
+//     }
+//   console.log(tripsAPI.length)
+//   }
