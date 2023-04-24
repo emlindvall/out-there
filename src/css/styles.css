@@ -109,6 +109,10 @@ body, html {
   cursor: pointer;
 }
 
+.submit-button:hover  {
+  background-color: #3275EA;
+}
+
 .sign-in-container.active .sign-in-dropdown{
   display: block;
   animation-name: fadeInUp;
@@ -383,6 +387,12 @@ body, html {
 .pending, .approved, .pending-icon, .approved-icon {
   margin: 5px;
   font-size: 1.75vw;
+  font-weight: bold;
+}
+
+.data {
+  margin: 5px;
+  padding-top: 7.5px;
   font-weight: bold;
 }
 
