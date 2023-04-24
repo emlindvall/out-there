@@ -23,11 +23,13 @@ import './images/luggage-icon.png';
 import './images/footer-logo.png';
 
 // global variables
-let travelersAPI, tripsAPI, destinationsAPI, user, trip, selectedDestinationID;
+// let travelersAPI, tripsAPI, destinationsAPI, user, trip, selectedDestinationID;
+let travelerAPI, tripsAPI, destinationsAPI, user, userID, trip, selectedDestinationID;
 let signedIn = false;
 let destinationsToggle = false;
 
 // query selectors
+const logInMessage = document.querySelector(".log-in-message");
 const dropdownButton = document.querySelector(".dropdown-button");
 const optionMenu = document.querySelector(".sign-in-container");
 const username = document.getElementById("username");
@@ -62,46 +64,63 @@ postButton.addEventListener("click", postTrip);
 // functions
 window.addEventListener('load', () => {
   Promise.all(apiCalls).then((cv) => {
-      travelersAPI = cv[0].travelers;
-      destinationsAPI = cv[1].destinations;
-      tripsAPI = cv[2].trips;
-      getRandomIndex();
-      getUser();
+      // travelersAPI = cv[0].travelers;
+      // destinationsAPI = cv[1].destinations;
+      destinationsAPI = cv[0].destinations;
+      // tripsAPI = cv[2].trips;
+      tripsAPI = cv[1].trips;
       loadDestinationsCarousel();
-      getApprovedCarousel();
-      getPendingCarousel();
       selectDestination();
-      mountSplides();
     })
     .catch(error => console.log(error));
 })
 
-function getRandomIndex() {
-  return Math.floor(Math.random() * travelersAPI.length);
+function signIn() {
+  Promise.all([getUser(), fetchUserAPI(userID)])
+  .then(function(values)  {
+    loadUserInfo();
+  })
 }
 
 function getUser() {
-  user = new User(travelersAPI[getRandomIndex(travelersAPI)]);
+  if (username.value && password.value && password.value === "travel" && username.value.includes("traveler") && username.value.slice(8,10) <= 50) {
+    userID = username.value.slice(8,10);
+    username.value = "";
+    password.value = "";
+    optionMenu.classList.toggle("active")
+    logInMessage.style.display = "none";
+  } else if (!username.value || !password.value) {
+    window.alert("Whoa, hold up! Please make sure to enter both a username and a password.");
+  }
+  return userID;
+}
+
+function fetchUserAPI(userID) {
+  console.log(userID);
+  let url = `http://localhost:3001/api/v1/travelers/${userID}`;
+  console.log(url);
+  let travelerData = fetch(url)
+    .then(response => response.json())
+    .catch(error => console.log(error));
+    Promise.resolve(travelerData).then(
+      (value) => {
+        travelerAPI = value;
+        user = new User(travelerAPI);
+        console.log(travelerAPI);
+        console.log(user);
+      },
+    ); 
+  return travelerData;
+}
+
+function loadUserInfo() {
+  console.log(user);
   welcome.innerText = `Welcome back, ${user.name.split(" ")[0]}!`;
   approvedSum.innerText = `${user.getApproved(tripsAPI).length} Trips Approved`;
   pendingSum.innerText = `${user.getPending(tripsAPI).length} Trips Pending`;
   spentSum.innerText = `${user.getTotalSpent(tripsAPI, destinationsAPI)} Spent`;
-}
-
-function signIn() {
-  let maxTravelers = travelersAPI.length;
-  let userID = username.value.slice(8,10);
-  if (username.value && password.value && password.value === "travel" && username.value.includes("traveler") && userID <= 50) {
-    console.log(username.value);
-    console.log(password.value);
-  } if (!username.value || !password.value) {
-    window.alert("Whoa, hold up! Please make sure to enter both a username and a password.");
-  }
-  let user = new User(travelersAPI[userID - 1])
-  console.log(user);
-  username.value = "";
-  password.value = "";
-  optionMenu.classList.toggle("active")
+  loadPendingCarousel();
+  loadApprovedCarousel();
 }
 
 function dateHelperDOM(date) {
@@ -165,7 +184,7 @@ function loadDestinationsCarousel()  {
     }).mount();
 }
 
-function getPendingCarousel() {
+function loadPendingCarousel() {
   let pendingTrips = user.getPending(tripsAPI);
   if (pendingTrips.length === 0)  {
     pendingDetails.innerHTML = `
@@ -199,7 +218,7 @@ function getPendingCarousel() {
   }
 }
 
-function getApprovedCarousel() {
+function loadApprovedCarousel() {
   let approvedTrips = user.getApproved(tripsAPI, destinationsAPI);
   const loadCarousel = approvedTrips.forEach((cv) =>  {
     trip = new Trip(cv.id, tripsAPI, destinationsAPI);
@@ -241,7 +260,7 @@ function selectDestination() {
     } else if (destinationsToggle === true)  {
       selectedDestinationID = "";
       destinationsToggle = false;
-      event.target.style.border = "0px solid #4F8FFD";
+      event.target.style.border = "none";
       event.target.style.filter = "grayscale(110)";
     }
   }
@@ -249,18 +268,23 @@ function selectDestination() {
 
 function postTrip() {
   event.preventDefault();
+  console.log(user);
+  let userID = user.userID;
+  console.log(userID);
+  let tripDest = Number(selectedDestinationID);
+  let tripTravelers = travelersInput.value;
   let date = dateInput.value;
   let tripDate = dateHelperPost(date);
   let tripDuration = durationInput.value;
-  let tripTrav = travelersInput.value;
-  let tripDest = Number(selectedDestinationID);
-  let currentUser = user.userID;
   let tripStat = "pending";
   let idPlusOne = (tripsAPI.length + 1);
+  if (!user)  {
+    window.alert("Please sign in to book this trip.");
+    }
   if (!dateInput.value || !durationInput.value || !travelersInput.value || selectedDestinationID === "") {
     window.alert("Whoa, hold up! We're missing something. Please select a destination, date of departure, duration of your trip, and number of travelers in your party.");
   } else if (destinationsToggle === false) {
-  window.alert("You didn't tell us where you're going! Double-click your desintation to select it.");
+    window.alert("You didn't tell us where you're going! Double-click your desintation to select it.");
   } else if (durationInput.value < 1)  {
     window.alert("Hmmm, something's wrong here. Your trip duration must be a minimum of 1 day.");
   } else if (travelersInput.value < 1)  {
@@ -270,9 +294,9 @@ function postTrip() {
         method: 'POST',
         body: JSON.stringify(
             {id: idPlusOne , 
-              userID: currentUser, 
+              userID: userID, 
               destinationID: tripDest, 
-              travelers: tripTrav, 
+              travelers: tripTravelers, 
               date: tripDate, 
               duration: tripDuration, 
               status: tripStat,
@@ -284,23 +308,30 @@ function postTrip() {
         })
         .then(response => response.json())
         .then(fetchTripsAPI())
-        .then(getPendingCarousel())
+        .then(loadPendingCarousel())
         .catch(Error => 'Server Error... Try again later!');
       }
     }
 
 
 function fetchTripsAPI()  {
+  event.preventDefault();
   let tripsPromise = fetch("http://localhost:3001/api/v1/trips")
     .then(response => response.json())
     .catch(error => console.log(error));
   Promise.resolve(tripsPromise).then(
     (value) => {
-      console.log(value.trips)
-      tripsAPI = value.trips
+      tripsAPI = value.trips;
     },
     (reason) => {
     }
   );
   return tripsAPI;
+}
+
+function clearForms() {
+  dateInput.value = ""
+  durationInput.value = ""
+  travelersInput.value = ""
+  selectedDestinationID = ""
 }
