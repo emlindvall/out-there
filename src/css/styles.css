@@ -19,7 +19,7 @@ light green #2CC299
 body, html {
   margin: 0px;
   background-color: #FFFFFF;
-  font-weight: thin;
+  font-weight: 300;
   font-size: 14px;
   color: #292929;
   text-align: center;
@@ -44,12 +44,99 @@ body, html {
 }
 
 .profile-icon {
-  padding-right: 5px;
+  margin-right: 10px;
+  padding-top: 2.5px;
+}
+
+/* sign in container */
+.sign-in  {
   cursor: pointer;
 }
 
-.sign-in  {
+.dropdown-button {
+  border: none;
+  background-color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 400;
+  color: #292929;
   cursor: pointer;
+}
+
+/* drop-down menu */
+.sign-in-container {
+  cursor: pointer;
+}
+
+.sign-in-dropdown {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  position: absolute;
+  margin-top: 25px;
+  padding-top: 10px;
+  width: 200px;
+  height: 132.5px;
+  border-radius: 8px;
+  background: #FFFFFF;
+  box-shadow: 0 0 15px 4px #0000000F;
+  animation-name: fadeInDown;
+  -webkit-animation-name: fadeInDown;
+  animation-duration: 0s;
+  animation-fill-mode: both;
+  -webkit-animation-duration: 0s;
+  -webkit-animation-fill-mode: both;
+}
+
+#username, #password  {
+  margin-top: 5px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 15px 4px #0000000F;
+}
+
+.submit-button {
+  margin-top: 5px;
+  padding-top: 10px;
+  padding-right: 50px;
+  padding-bottom: 10px;
+  padding-left: 50px;
+  background-color: #4F8FFD;
+  border: none;
+  border-radius: 15px;
+  font-weight: 100;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+.sign-in-container.active .sign-in-dropdown{
+  display: block;
+  animation-name: fadeInUp;
+  -webkit-animation-name: fadeInUp;
+  animation-duration: 0s;
+  animation-fill-mode: both;
+  -webkit-animation-duration: 0s;
+  -webkit-animation-fill-mode: both;
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+@keyframes fadeInDown {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
 }
 
 /* landing page */
@@ -132,6 +219,7 @@ body, html {
 
 .get-out-there {
   font-size: 3vw;
+  font-weight: bold;
 }
 
 #date {
@@ -152,7 +240,7 @@ body, html {
 /* carousels */
 #destination-splide {
   margin-top: 2.5%;
-  height: 250px;
+  height: 255px;
 }
 
 #approved-splide, #pending-splide  {
@@ -164,7 +252,6 @@ body, html {
   height: fit-content;
   width: 90vw;
   height: 255px;
-
 }
 
 #approved-splide__track, #pending-splide__track {
@@ -180,7 +267,7 @@ body, html {
 
 .destinationImage {
   width: 100%;
-  height: 100%;
+  height: 90%;
   object-fit: cover;
   cursor: pointer;
   -webkit-filter: grayscale(100%);
@@ -192,15 +279,19 @@ body, html {
   filter: grayscale(0);
 }
 
-.destinationName {
+.carouselName {
   position: absolute;
-  top: 37%;
+  top: 38%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: Syne;
   font-size: 30px;
   color: #EBE94E;
   user-select: none;
+}
+
+#approved-splide__slide {
+  padding: 25px;
 }
 
 /* booking selection verifcation  */
@@ -254,6 +345,7 @@ body, html {
 
 .trips-header {
   font-size: 3vw;
+  font-weight: bold;
 }
 
 .pending-approved-trips  {
@@ -290,6 +382,8 @@ body, html {
 
 .pending, .approved, .pending-icon, .approved-icon {
   margin: 5px;
+  font-size: 1.75vw;
+  font-weight: bold;
 }
 
 .pending-trip-date, .approved-trip-date, .pending-trip-duration, .approved-trip-duration, .pending-trip-travelers, .approved-trip-travelers, .pending-trip-duration, .approved-trip-duration, .pending-trip-id, .approved-trip-id, .pending-trip-cost, .approved-trip-cost {
