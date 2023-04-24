@@ -19,14 +19,11 @@ import './images/length-icon.png';
 import './images/party-icon.png';
 import './images/pending-icon.png';
 import './images/confirmed-icon.png';
-import './images/luggage-icon.png';
 import './images/footer-logo.png';
 
 // global variables
-// let travelersAPI, tripsAPI, destinationsAPI, user, trip, selectedDestinationID;
 let travelerAPI, tripsAPI, destinationsAPI, user, userID, trip, selectedDestinationID;
-let signedIn = false;
-let destinationsToggle = false;
+let selectToggle = false;
 
 // query selectors
 const logInMessage = document.querySelector(".log-in-message");
@@ -41,6 +38,7 @@ const dateInput = document.getElementById("date");
 const durationInput = document.getElementById("duration");
 const travelersInput = document.getElementById("travelers");
 const locationInput = document.getElementById("location");
+const tripsWrapper = document.querySelector(".trips-wrapper");
 const destinationsCarousel = document.getElementById("destination-splide__list");
 const approvedCarousel = document.getElementById("approved-splide__list");
 const pendingCarousel = document.getElementById("pending-splide__list");
@@ -60,14 +58,15 @@ dropdownButton.addEventListener("click", () =>
 submitButton.addEventListener("click", signIn);
 destinationsCarousel.addEventListener("dblclick", selectDestination);
 postButton.addEventListener("click", postTrip);
+dateInput.addEventListener("input", getCostEstimate);
+durationInput.addEventListener("input", displayCostEstimate);
+travelersInput.addEventListener("input", displayCostEstimate);
+locationInput.addEventListener("input", displayCostEstimate);
 
 // functions
 window.addEventListener('load', () => {
   Promise.all(apiCalls).then((cv) => {
-      // travelersAPI = cv[0].travelers;
-      // destinationsAPI = cv[1].destinations;
       destinationsAPI = cv[0].destinations;
-      // tripsAPI = cv[2].trips;
       tripsAPI = cv[1].trips;
       loadDestinationsCarousel();
       selectDestination();
@@ -96,9 +95,7 @@ function getUser() {
 }
 
 function fetchUserAPI(userID) {
-  console.log(userID);
   let url = `http://localhost:3001/api/v1/travelers/${userID}`;
-  console.log(url);
   let travelerData = fetch(url)
     .then(response => response.json())
     .catch(error => console.log(error));
@@ -114,7 +111,8 @@ function fetchUserAPI(userID) {
 }
 
 function loadUserInfo() {
-  console.log(user);
+  tripsWrapper.style.display = "inline";
+  dropdownButton.innerText = `Welcome back, ${user.name.split(" ")[0]}!`;
   welcome.innerText = `Welcome back, ${user.name.split(" ")[0]}!`;
   approvedSum.innerText = `${user.getApproved(tripsAPI).length} Trips Approved`;
   pendingSum.innerText = `${user.getPending(tripsAPI).length} Trips Pending`;
@@ -246,31 +244,45 @@ function loadApprovedCarousel() {
     }).mount();
 }
 
-function selectDestination() {
-  if (event.target.className.includes("destinationImage"))  {
-    if (destinationsToggle === false) {
-      selectedDestinationID = event.target.id;
-      destinationsToggle = true;
-      locationInput.value = selectedDestinationID;
-      event.target.style.border = "3px solid #4F8FFD";
-      event.target.style.filter = "grayscale(0)";
-      let destinationIndex = [JSON.parse(selectedDestinationID) - 1];
-      selectedDestination.innerText = `${destinationsAPI[destinationIndex].destination}`;
-      displayCostEstimate();
-    } else if (destinationsToggle === true)  {
-      selectedDestinationID = "";
-      destinationsToggle = false;
-      event.target.style.border = "none";
-      event.target.style.filter = "grayscale(110)";
-    }
+function selectDestination()  {
+  if (event.target.className.includes("destinationImage") && selectToggle === false) {
+    selectToggle = true;
+    selectedDestinationID = event.target.id;
+    locationInput.value = selectedDestinationID;
+    event.target.style.border = "3px solid #4F8FFD";
+    event.target.style.filter = "grayscale(0)";
+    let destinationIndex = [JSON.parse(selectedDestinationID) - 1];
+    selectedDestination.innerText = `${destinationsAPI[destinationIndex].destination}`;
+  } else if (selectToggle === false )  {
+    selectToggle = false;
+    selectedDestinationID = "";
+    event.target.style.border = "none";
+    event.target.style.filter = "grayscale(110)";
   }
 }
 
+
+
+//     if (destinationsToggle === false) {
+//       selectedDestinationID = event.target.id;
+//       destinationsToggle = true;
+//       locationInput.value = selectedDestinationID;
+//       event.target.style.border = "3px solid #4F8FFD";
+//       event.target.style.filter = "grayscale(0)";
+//       let destinationIndex = [JSON.parse(selectedDestinationID) - 1];
+//       selectedDestination.innerText = `${destinationsAPI[destinationIndex].destination}`;
+//     } else if (destinationsToggle === true)  {
+//       selectedDestinationID = "";
+//       destinationsToggle = false;
+//       event.target.style.border = "none";
+//       event.target.style.filter = "grayscale(110)";
+//     }
+//   }
+// }
+
 function postTrip() {
   event.preventDefault();
-  console.log(user);
   let userID = user.userID;
-  console.log(userID);
   let tripDest = Number(selectedDestinationID);
   let tripTravelers = travelersInput.value;
   let date = dateInput.value;
@@ -327,11 +339,4 @@ function fetchTripsAPI()  {
     }
   );
   return tripsAPI;
-}
-
-function clearForms() {
-  dateInput.value = ""
-  durationInput.value = ""
-  travelersInput.value = ""
-  selectedDestinationID = ""
 }

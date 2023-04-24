@@ -331,7 +331,12 @@ body, html {
 }
 
 /* trips container */
+.trips-wrapper  {
+  display: none;
+
+}
 .trips-container  {
+  display: hidden;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
