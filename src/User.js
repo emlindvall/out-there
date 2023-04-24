@@ -10,6 +10,7 @@ class User {
     const reduceTrips = tripsAPI.reduce((acc, cv) =>  {
       if (cv.userID === this.userID && cv.status === "approved") {
         acc.push(cv);
+        acc.sort((a, b) => b.date - a.date);
       }
       return acc;
     }, [])
@@ -20,6 +21,7 @@ class User {
     const reduceTrips = tripsAPI.reduce((acc, cv) =>  {
       if (cv.userID === this.userID && cv.status === "pending") {
         acc.push(cv);
+        acc.sort((a, b) => b.date - a.date);
       }
       return acc;
     }, [])

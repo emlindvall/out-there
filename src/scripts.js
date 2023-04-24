@@ -24,9 +24,15 @@ import './images/footer-logo.png';
 
 // global variables
 let travelersAPI, tripsAPI, destinationsAPI, user, trip, selectedDestinationID;
+let signedIn = false;
 let destinationsToggle = false;
 
 // query selectors
+const dropdownButton = document.querySelector(".dropdown-button");
+const optionMenu = document.querySelector(".sign-in-container");
+const username = document.getElementById("username");
+const password = document.getElementById("password");
+const submitButton = document.querySelector(".submit-button");
 const bookButton = document.querySelector(".book-button-landing");
 const postButton = document.querySelector(".book-button-booking");
 const dateInput = document.getElementById("date");
@@ -46,8 +52,12 @@ const costEstimate = document.querySelector(".cost-estimate");
 const formFields = document.getElementsByClassName("form-field");
 
 // event listeners
-postButton.addEventListener("click", postTrip);
+dropdownButton.addEventListener("click", () =>
+  optionMenu.classList.toggle("active")
+);
+submitButton.addEventListener("click", signIn);
 destinationsCarousel.addEventListener("dblclick", selectDestination);
+postButton.addEventListener("click", postTrip);
 
 // functions
 window.addEventListener('load', () => {
@@ -70,6 +80,30 @@ function getRandomIndex() {
   return Math.floor(Math.random() * travelersAPI.length);
 }
 
+function getUser() {
+  user = new User(travelersAPI[getRandomIndex(travelersAPI)]);
+  welcome.innerText = `Welcome back, ${user.name.split(" ")[0]}!`;
+  approvedSum.innerText = `${user.getApproved(tripsAPI).length} Trips Approved`;
+  pendingSum.innerText = `${user.getPending(tripsAPI).length} Trips Pending`;
+  spentSum.innerText = `${user.getTotalSpent(tripsAPI, destinationsAPI)} Spent`;
+}
+
+function signIn() {
+  let maxTravelers = travelersAPI.length;
+  let userID = username.value.slice(8,10);
+  if (username.value && password.value && password.value === "travel" && username.value.includes("traveler") && userID <= 50) {
+    console.log(username.value);
+    console.log(password.value);
+  } if (!username.value || !password.value) {
+    window.alert("Whoa, hold up! Please make sure to enter both a username and a password.");
+  }
+  let user = new User(travelersAPI[userID - 1])
+  console.log(user);
+  username.value = "";
+  password.value = "";
+  optionMenu.classList.toggle("active")
+}
+
 function dateHelperDOM(date) {
   let mm = date.slice(5,7);
   let dd = date.slice(8,10)
@@ -84,116 +118,6 @@ function dateHelperPost(date) {
   let yyyy = date.slice(0, 4);
   let formattedDate = `${yyyy}/${mm}/${dd}`;
   return formattedDate;
-}
-
-function getUser() {
-  user = new User(travelersAPI[getRandomIndex(travelersAPI)]);
-  welcome.innerText = `Welcome back, ${user.name.split(" ")[0]}!`;
-  approvedSum.innerText = `${user.getApproved(tripsAPI).length} Trips Approved`;
-  pendingSum.innerText = `${user.getPending(tripsAPI).length} Trips Pending`;
-  spentSum.innerText = `${user.getTotalSpent(tripsAPI, destinationsAPI)} Spent`;
-}
-
-function loadDestinationsCarousel()  {
-    const loadCarousel = destinationsAPI.forEach((cv) =>  {
-      let destinationName = cv.destination.split(",")[0];
-      let destinationImage = cv.image;
-      let newSlide = `
-      <div class="splide__slide" id="destination-splide__slide">
-        <img class="destinationImage" id="${cv.id}" src="${destinationImage}">
-        <p class="destinationName" id="${cv.id}" inert="true">${destinationName}</p>
-      </div>
-      `
-      destinationsCarousel.innerHTML += newSlide;
-    })
-    new Splide( '#destination-splide', {
-      type: "loop",
-      gap: 10,
-      perPage: 5,
-      pagination: false
-    }).mount();
-}
-
-function getPendingCarousel() {
-  let pendingTrips = user.getPending(tripsAPI);
-  if (pendingTrips.length === 0)  {
-    pendingDetails.innerHTML = `
-    <p>You have no pending trips at this time.</p>
-    `
-  } else {
-    const loadCarousel = pendingTrips.forEach((cv) =>  {
-      trip = new Trip(cv.id, tripsAPI, destinationsAPI);
-      let destinationName = destinationsAPI[cv.destinationID - 1].destination;
-      let destinationImageSRC = destinationsAPI[cv.destinationID - 1].image;
-      let startDate = dateHelperDOM(cv.date);
-      let tripCost = trip.getTripCost(cv.id, tripsAPI, destinationsAPI);
-      let newSlide = `
-        <div class="splide__slide" id="pending-splide__slide">
-          <img class="destinationImage" id="pending-destinationImage" src="${destinationImageSRC}"
-          <p class="destinationName" id="pending-destinationName">${destinationName}</p>
-          <p class="pending-trip-date">Departure on ${startDate}</p>
-          <p class="pending-trip-duration">${cv.duration} Days</p>
-          <p class="pending-trip-travelers">${cv.travelers} Travelers</p>
-          <p class="pending-trip-id">Trip ID #${cv.id}</p>
-          <p class="pending-trip-cost">${tripCost}</p>
-        </div>
-      `
-      pendingCarousel.innerHTML += newSlide;
-    })
-    new Splide( '#pending-splide', {
-      type: "loop",
-      perPage: 1,
-      pagination: false
-    }).mount();
-  }
-}
-
-function getApprovedCarousel() {
-  let approvedTrips = user.getApproved(tripsAPI, destinationsAPI);
-  const loadCarousel = approvedTrips.forEach((cv) =>  {
-    trip = new Trip(cv.id, tripsAPI, destinationsAPI);
-    let destinationName = destinationsAPI[cv.destinationID - 1].destination;
-    let destinationImageSRC = destinationsAPI[cv.destinationID - 1].image;
-    let startDate = dateHelperDOM(cv.date);
-    let tripCost = trip.getTripCost(cv.id, tripsAPI, destinationsAPI);
-    let newSlide = `
-      <div class="splide__slide" id="approved-splide__slide">
-        <img class="destinationImage" id="approved-destinationImage" src="${destinationImageSRC}"
-        <p class="destinationName" id="approved-destinationName">${destinationName}</p>
-        <p class="approved-trip-date">Departure on ${startDate}</p>
-        <p class="approved-trip-duration">${cv.duration} Days</p>
-        <p class="approved-trip-travelers">${cv.travelers} Travelers</p>
-        <p class="approved-trip-id">Trip ID #${cv.id}</p>
-        <p class="approved-trip-cost">${tripCost}</p>
-      </div>
-      `
-      approvedCarousel.innerHTML += newSlide;
-    })
-    new Splide( '#approved-splide', {
-      type: "loop",
-      perPage: 1,
-      pagination: false
-    }).mount();
-}
-
-function selectDestination() {
-  if (event.target.className.includes("destinationImage"))  {
-    if (destinationsToggle === false) {
-      selectedDestinationID = event.target.id;
-      destinationsToggle = true;
-      locationInput.value = selectedDestinationID;
-      event.target.style.border = "3px solid #4F8FFD";
-      event.target.style.filter = "grayscale(0)";
-      let destinationIndex = [JSON.parse(selectedDestinationID) - 1];
-      selectedDestination.innerText = `${destinationsAPI[destinationIndex].destination}`;
-      displayCostEstimate();
-    } else if (destinationsToggle === true)  {
-      selectedDestinationID = "";
-      destinationsToggle = false;
-      event.target.style.border = "0px solid #4F8FFD";
-      event.target.style.filter = "grayscale(110)";
-    }
-  }
 }
 
 function getCostEstimate()  {
@@ -218,6 +142,108 @@ function displayCostEstimate()  {
         costEstimate.innerText = `The estimated overall cost for this trip is ${getCostEstimate()}`;
       }
     })
+  }
+}
+
+function loadDestinationsCarousel()  {
+    const loadCarousel = destinationsAPI.forEach((cv) =>  {
+      let destinationName = cv.destination.split(",")[0];
+      let destinationImage = cv.image;
+      let newSlide = `
+      <div class="splide__slide" id="destination-splide__slide">
+        <img class="destinationImage" id="${cv.id}" alt="${destinationName} selector" src="${destinationImage}">
+        <p class="carouselName" id="${cv.id}" inert="true">${destinationName}</p>
+      </div>
+      `
+      destinationsCarousel.innerHTML += newSlide;
+    })
+    new Splide( '#destination-splide', {
+      type: "loop",
+      gap: 10,
+      perPage: 5,
+      pagination: true
+    }).mount();
+}
+
+function getPendingCarousel() {
+  let pendingTrips = user.getPending(tripsAPI);
+  if (pendingTrips.length === 0)  {
+    pendingDetails.innerHTML = `
+    <p>You have no pending trips at this time.</p>
+    `
+  } else {
+    const loadCarousel = pendingTrips.forEach((cv) =>  {
+      trip = new Trip(cv.id, tripsAPI, destinationsAPI);
+      let destinationName = destinationsAPI[cv.destinationID - 1].destination;
+      let destinationImageSRC = destinationsAPI[cv.destinationID - 1].image;
+      let startDate = dateHelperDOM(cv.date);
+      let tripCost = trip.getTripCost(cv.id, tripsAPI, destinationsAPI);
+      let newSlide = `
+        <div class="splide__slide" id="pending-splide__slide">
+          <img class="destinationImage" id="pending-destinationImage" alt="${destinationName} image" src="${destinationImageSRC}"
+          <p class="destinationName" id="pending-destination-name">${destinationName}</p>
+          <p class="pending-trip-date">Departure on ${startDate}</p>
+          <p class="pending-trip-duration">${cv.duration} Days</p>
+          <p class="pending-trip-travelers">${cv.travelers} Travelers</p>
+          <p class="pending-trip-id">Trip ID #${cv.id}</p>
+          <p class="pending-trip-cost">${tripCost}</p>
+        </div>
+      `
+      pendingCarousel.innerHTML += newSlide;
+    })
+    new Splide( '#pending-splide', {
+      type: "slide",
+      perPage: 1,
+      pagination: true
+    }).mount();
+  }
+}
+
+function getApprovedCarousel() {
+  let approvedTrips = user.getApproved(tripsAPI, destinationsAPI);
+  const loadCarousel = approvedTrips.forEach((cv) =>  {
+    trip = new Trip(cv.id, tripsAPI, destinationsAPI);
+    let destinationName = destinationsAPI[cv.destinationID - 1].destination;
+    let destinationImageSRC = destinationsAPI[cv.destinationID - 1].image;
+    let startDate = dateHelperDOM(cv.date);
+    let tripCost = trip.getTripCost(cv.id, tripsAPI, destinationsAPI);
+    let newSlide = `
+      <div class="splide__slide" id="approved-splide__slide">
+        <img class="destinationImage" id="approved-destinationImage" alt="${destinationName} image" src="${destinationImageSRC}"
+        <p class="destinationName" id="approved-destination-name">${destinationName}</p>
+        <p class="approved-trip-date">Departure on ${startDate}</p>
+        <p class="approved-trip-duration">${cv.duration} Days</p>
+        <p class="approved-trip-travelers">${cv.travelers} Travelers</p>
+        <p class="approved-trip-id">Trip ID #${cv.id}</p>
+        <p class="approved-trip-cost">${tripCost}</p>
+      </div>
+      `
+      approvedCarousel.innerHTML += newSlide;
+    })
+    new Splide( '#approved-splide', {
+      type: "slide",
+      perPage: 1,
+      pagination: true
+    }).mount();
+}
+
+function selectDestination() {
+  if (event.target.className.includes("destinationImage"))  {
+    if (destinationsToggle === false) {
+      selectedDestinationID = event.target.id;
+      destinationsToggle = true;
+      locationInput.value = selectedDestinationID;
+      event.target.style.border = "3px solid #4F8FFD";
+      event.target.style.filter = "grayscale(0)";
+      let destinationIndex = [JSON.parse(selectedDestinationID) - 1];
+      selectedDestination.innerText = `${destinationsAPI[destinationIndex].destination}`;
+      displayCostEstimate();
+    } else if (destinationsToggle === true)  {
+      selectedDestinationID = "";
+      destinationsToggle = false;
+      event.target.style.border = "0px solid #4F8FFD";
+      event.target.style.filter = "grayscale(110)";
+    }
   }
 }
 
@@ -276,7 +302,5 @@ function fetchTripsAPI()  {
     (reason) => {
     }
   );
-  console.log("in fetchTripsAPI")
-  console.log(tripsAPI);
   return tripsAPI;
 }
