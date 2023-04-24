@@ -7,11 +7,9 @@
   <title>The world is out there</title>
 </head>
 <body>
-  <!-- nav -->
   <nav class="nav-container">
     <div class="profile-container">
       <img class="profile-icon" src="./images/profile-icon.png" alt="profile-icon" height="25px" width="25px">
-      <!-- sign in container -->
       <div class="sign-in-container">
         <div class="sign-in">
           <button class="dropdown-button">sign in</button>
@@ -25,9 +23,7 @@
     </div>
     <img class="out-there-logo" src="./images/out-there-logo.png" alt="out-there-logo" height="15px" width="75px">
   </nav>
-  <!-- display -->
   <main class="display-container">
-    <!-- landing area -->
     <div class="landing-container">
       <style>
         .landing-container {
@@ -40,14 +36,11 @@
       <p class="tagline">Your next adventure is on us.</p> 
       <button class="book-button-landing">BOOK A TRIP</button> 
     </div>
-    <!-- booking container -->
-    <!-- booking header -->
     <div class="booking-container">
       <div class="booking-header-container">
         <img class="pin-icon" src="./images/pin-icon.png" alt="pin-icon" height="50px" width="50px">
         <p class="get-out-there">get out there</h1>
       </div>
-      <!-- booking forms -->
       <div class="booking-form-container">
         <form class="departure-form">
           <input type="date" class="form-field" id="date" name="date" placeholder="Date of departure">
@@ -62,7 +55,6 @@
           <input type="number" class="form-field" id="location" name="location" hidden>
         </form>
       </div>
-      <!-- booking destinations carousel -->
       <section class="splide" id="destination-splide" aria-label="Destination Selector">
         <div class="splide__track" id="destination-splide__track">
           <div class="splide__list" id="destination-splide__list">
@@ -70,53 +62,47 @@
         </div>
       </section>
       <p class="selected-destination">Where would you like to go?</p>
-      <p class="cost-estimate" hidden></p>
+      <p class="cost-estimate"></p>
       <button class="book-button-booking">LET'S GO</button>
-    <!-- trips container -->
-    <!-- trips header -->
-    <div class="trips-container">
-      <div class="trips-header-container">
-        <img class="pin-icon" src="./images/pin-icon.png" alt="pin-icon" height="50px" width="50px">
-        <p class="trips-header">your trips</h1>
-      </div>
-      <div class="pending-approved-trips">
-        <!-- pending trips -->
-        <div class="pending-trips-container">
-          <div class="pending-header-container">
-            <p class="pending">pending</p>
-            <img class="pending-icon" src="./images/pending-icon.png" alt="pending-icon" height="25px" width="25px">
-          </div>
-           <!-- pending details container -->
-           <div class="pending-details-container"></div>
-          <!-- pending carousel -->
-          <section class="splide" id="pending-splide" aria-label="Destination Selector">
-            <div class="splide__track" id="pending-splide__track">
-              <div class="splide__list" id="pending-splide__list">
+    <div class="trips-wrapper">
+      <div class="trips-container">
+        <div class="trips-header-container">
+          <img class="pin-icon" src="./images/pin-icon.png" alt="pin-icon" height="50px" width="50px">
+          <p class="trips-header">your trips</h1>
+        </div>
+        <div class="pending-approved-trips">
+          <div class="pending-trips-container">
+            <div class="pending-header-container">
+              <p class="pending">pending</p>
+              <img class="pending-icon" src="./images/pending-icon.png" alt="pending-icon" height="25px" width="25px">
+            </div>
+            <div class="pending-details-container"></div>
+            <section class="splide" id="pending-splide" aria-label="Destination Selector">
+              <div class="splide__track" id="pending-splide__track">
+                <div class="splide__list" id="pending-splide__list">
+                </div>
               </div>
-            </div>
-          </section>
-        </div>
-        <!-- trips data container -->
-        <div class="user-data-container">
-          <p class="data">your data</p>
-          <p class="log-in-message">Sign in to book your next trip.</p>
-          <p class="welcome"></p>
-          <p class="approved-sum"></p>
-          <p class="pending-sum"></p>
-          <p class="spent-sum"></p>
-        </div>
-        <!-- approved trips -->
-        <div class="approved-trips-container">
-          <div class="approved-header-container">
-            <img class="approved-icon" src="./images/confirmed-icon.png" alt="confirmed-icon" height="25px" width="25px">
-            <p class="approved">approved</p>
+            </section>
           </div>
-          <!-- approved carousel -->
-          <section class="splide" id="approved-splide" aria-label="Approved Trips">
-            <div class="splide__track" id="approved-splide__track">
-              <div class="splide__list" id="approved-splide__list"></div>
+          <div class="user-data-container">
+            <p class="data">your data</p>
+            <p class="log-in-message">Sign in to book your next trip.</p>
+            <p class="welcome"></p>
+            <p class="approved-sum"></p>
+            <p class="pending-sum"></p>
+            <p class="spent-sum"></p>
+          </div>
+          <div class="approved-trips-container">
+            <div class="approved-header-container">
+              <img class="approved-icon" src="./images/confirmed-icon.png" alt="confirmed-icon" height="25px" width="25px">
+              <p class="approved">approved</p>
             </div>
-          </section>
+            <section class="splide" id="approved-splide" aria-label="Approved Trips">
+              <div class="splide__track" id="approved-splide__track">
+                <div class="splide__list" id="approved-splide__list"></div>
+              </div>
+            </section>
+          </div>
         </div>
       </div>
     </div>

@@ -2,8 +2,6 @@ class User {
   constructor(travelerObject) {
     this.userID = travelerObject.id;
     this.name = travelerObject.name;
-    this.username = `traveler${travelerObject.id}`
-    this.password = "travel";
   }
 
   getApproved(tripsAPI) {
