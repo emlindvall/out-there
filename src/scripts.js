@@ -62,7 +62,7 @@ postButton.addEventListener("click", postTrip);
 dateInput.addEventListener("input", displayCostEstimate);
 durationInput.addEventListener("input", displayCostEstimate);
 travelersInput.addEventListener("input", displayCostEstimate);
-locationInput.addEventListener("change", displayCostEstimate);
+locationInput.addEventListener("input", displayCostEstimate);
 
 // functions
 window.addEventListener('load', () => {
@@ -146,25 +146,31 @@ function dateHelperPost(date) {
 
 function selectDestination() {
   if (event.target.className.includes("destinationImage"))  {
-    if (destinationsToggle === false) {
+    if (destinationsToggle === false && selectedDestinationID === undefined) {
       selectedDestinationID = event.target.id;
       locationInput.value = event.target.id;
+      destinationsToggle = true;
       event.target.style.border = "4px solid #4F8FFD";
       event.target.style.borderRadius = "10px";
       event.target.style.filter = "grayscale(0)";
       let destinationIndex = [JSON.parse(selectedDestinationID) - 1];
       selectedDestination.innerText = `${destinationsAPI[destinationIndex].destination}`;
-      destinationsToggle = true;
-    } else if (destinationsToggle === true)  {
-      selectedDestinationID = "";
-      locationInput.value = "";
+      displayCostEstimate();
+    } else if (destinationsToggle === true && selectedDestinationID !== event.target.id)  {
+      locationInput.value = undefined;
+      costEstimate.style.display = "";
+      selectedDestination.innerText = `Please deselect prior destination before choosing another.`;
+    } else if (destinationsToggle === true && selectedDestinationID == event.target.id)  {
+      destinationsToggle = false;
+      selectedDestinationID = undefined;
+      locationInput.value = undefined;
+      costEstimate.style.display = "";
       event.target.style.border = "none";
       event.target.style.borderRadius = "0px";
       event.target.style.filter = "grayscale(110)";
-      destinationsToggle = false;
+      selectedDestination.innerText = "Where would you like to go?";
     }
   }
-  displayCostEstimate();
 }
 
 function getCostEstimate()  {
@@ -234,6 +240,7 @@ function loadPendingCarousel() {
     new Splide( '#pending-splide', {
       type: "slide",
       perPage: 1,
+      arrows: true,
       pagination: true
     }).mount();
   }
@@ -263,6 +270,7 @@ function loadApprovedCarousel() {
     new Splide( '#approved-splide', {
       type: "slide",
       perPage: 1,
+      arrows: true,
       pagination: true
     }).mount();
 }
