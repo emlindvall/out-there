@@ -62,7 +62,7 @@ postButton.addEventListener("click", postTrip);
 dateInput.addEventListener("input", displayCostEstimate);
 durationInput.addEventListener("input", displayCostEstimate);
 travelersInput.addEventListener("input", displayCostEstimate);
-locationInput.addEventListener("change", displayCostEstimate);
+locationInput.addEventListener("input", displayCostEstimate);
 
 // functions
 window.addEventListener('load', () => {
@@ -155,20 +155,22 @@ function selectDestination() {
       event.target.style.filter = "grayscale(0)";
       let destinationIndex = [JSON.parse(selectedDestinationID) - 1];
       selectedDestination.innerText = `${destinationsAPI[destinationIndex].destination}`;
+      displayCostEstimate();
     } else if (destinationsToggle === true && selectedDestinationID !== event.target.id)  {
-      locationInput.value = "";
+      locationInput.value = undefined;
+      costEstimate.style.display = "";
       selectedDestination.innerText = `Please deselect prior destination before choosing another.`;
     } else if (destinationsToggle === true && selectedDestinationID == event.target.id)  {
       destinationsToggle = false;
       selectedDestinationID = undefined;
-      locationInput.value = "";
+      locationInput.value = undefined;
+      costEstimate.style.display = "";
       event.target.style.border = "none";
       event.target.style.borderRadius = "0px";
       event.target.style.filter = "grayscale(110)";
       selectedDestination.innerText = "Where would you like to go?";
     }
   }
-  displayCostEstimate();
 }
 
 function getCostEstimate()  {
