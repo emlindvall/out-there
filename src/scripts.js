@@ -91,8 +91,10 @@ function getUser() {
     logInMessage.style.display = "none";
   } else if (!username.value || !password.value) {
     window.alert("Whoa, hold up! Please make sure to enter both a username and a password.");
-  } else {
-    window.alert("Something's up here. That username and password were not a match.")
+  } else if (password.value !== "travel") {
+    window.alert("Hmmm, something's wrong here. That password is incorrect.");
+  } else if (!username.value.includes("traveler") || !username.value.slice(8,10) <= 50) {
+    window.alert("Hmmm, something's wrong here. That username is incorrect.");
   }
   return userID;
 }
