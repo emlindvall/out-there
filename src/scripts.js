@@ -23,7 +23,8 @@ import './images/footer-logo.png';
 
 // global variables
 let travelerAPI, tripsAPI, destinationsAPI, user, userID, trip, selectedDestinationID;
-let selectToggle = false;
+// let inputCounter = 0;
+let destinationsToggle = false;
 
 // query selectors
 const logInMessage = document.querySelector(".log-in-message");
@@ -34,6 +35,7 @@ const password = document.getElementById("password");
 const submitButton = document.querySelector(".submit-button");
 const bookButton = document.querySelector(".book-button-landing");
 const postButton = document.querySelector(".book-button-booking");
+const formFields = document.getElementsByClassName("form-field");
 const dateInput = document.getElementById("date");
 const durationInput = document.getElementById("duration");
 const travelersInput = document.getElementById("travelers");
@@ -49,7 +51,6 @@ const pendingSum = document.querySelector(".pending-sum");
 const spentSum = document.querySelector(".spent-sum");
 const selectedDestination = document.querySelector(".selected-destination");
 const costEstimate = document.querySelector(".cost-estimate");
-const formFields = document.getElementsByClassName("form-field");
 
 // event listeners
 dropdownButton.addEventListener("click", () =>
@@ -58,10 +59,11 @@ dropdownButton.addEventListener("click", () =>
 submitButton.addEventListener("click", signIn);
 destinationsCarousel.addEventListener("dblclick", selectDestination);
 postButton.addEventListener("click", postTrip);
-dateInput.addEventListener("input", getCostEstimate);
+dateInput.addEventListener("input", displayCostEstimate);
 durationInput.addEventListener("input", displayCostEstimate);
 travelersInput.addEventListener("input", displayCostEstimate);
 locationInput.addEventListener("input", displayCostEstimate);
+bookButton.addEventListener("click", snapToBooking);
 
 // functions
 window.addEventListener('load', () => {
@@ -121,6 +123,10 @@ function loadUserInfo() {
   loadApprovedCarousel();
 }
 
+function snapToBooking()  {
+  console.log(user);
+}
+
 function dateHelperDOM(date) {
   let mm = date.slice(5,7);
   let dd = date.slice(8,10)
@@ -137,6 +143,27 @@ function dateHelperPost(date) {
   return formattedDate;
 }
 
+function selectDestination() {
+  if (event.target.className.includes("destinationImage"))  {
+    if (destinationsToggle === false) {
+      locationInput.value = event.target.id;
+      selectedDestinationID = event.target.id;
+      destinationsToggle = true;
+      event.target.style.border = "4px solid #4F8FFD";
+      event.target.style.borderRadius = "10px";
+      event.target.style.filter = "grayscale(0)";
+      let destinationIndex = [JSON.parse(selectedDestinationID) - 1];
+      selectedDestination.innerText = `${destinationsAPI[destinationIndex].destination}`;
+    } else if (destinationsToggle === true)  {
+      selectedDestinationID = "";
+      destinationsToggle = false;
+      event.target.style.border = "none";
+      event.target.style.borderRadius = "0px";
+      event.target.style.filter = "grayscale(110)";
+    }
+  }
+}
+
 function getCostEstimate()  {
   let duration = durationInput.value;
   let travelers = travelersInput.value;
@@ -148,17 +175,10 @@ function getCostEstimate()  {
 }
 
 function displayCostEstimate()  {
-  let inputCounter = 0;
-  if (formFields.length > 0)  {
-    const checkForInput = Array.from(formFields).forEach((cv) => {
-      if (cv.value) {
-        inputCounter = (inputCounter + 1);
-      }
-      if (inputCounter === 4) {
-        costEstimate.style.display = "inline";
-        costEstimate.innerText = `The estimated overall cost for this trip is ${getCostEstimate()}`;
-      }
-    })
+  console.log("fired");
+  if (dateInput.value && durationInput.value && travelersInput.value && locationInput.value) {
+    costEstimate.style.display = "inline";
+    costEstimate.innerText = `The estimated overall cost for this trip is ${getCostEstimate()}`;
   }
 }
 
@@ -244,44 +264,11 @@ function loadApprovedCarousel() {
     }).mount();
 }
 
-function selectDestination()  {
-  if (event.target.className.includes("destinationImage") && selectToggle === false) {
-    selectToggle = true;
-    selectedDestinationID = event.target.id;
-    locationInput.value = selectedDestinationID;
-    event.target.style.border = "3px solid #4F8FFD";
-    event.target.style.filter = "grayscale(0)";
-    let destinationIndex = [JSON.parse(selectedDestinationID) - 1];
-    selectedDestination.innerText = `${destinationsAPI[destinationIndex].destination}`;
-  } else if (selectToggle === false )  {
-    selectToggle = false;
-    selectedDestinationID = "";
-    event.target.style.border = "none";
-    event.target.style.filter = "grayscale(110)";
-  }
-}
-
-
-
-//     if (destinationsToggle === false) {
-//       selectedDestinationID = event.target.id;
-//       destinationsToggle = true;
-//       locationInput.value = selectedDestinationID;
-//       event.target.style.border = "3px solid #4F8FFD";
-//       event.target.style.filter = "grayscale(0)";
-//       let destinationIndex = [JSON.parse(selectedDestinationID) - 1];
-//       selectedDestination.innerText = `${destinationsAPI[destinationIndex].destination}`;
-//     } else if (destinationsToggle === true)  {
-//       selectedDestinationID = "";
-//       destinationsToggle = false;
-//       event.target.style.border = "none";
-//       event.target.style.filter = "grayscale(110)";
-//     }
-//   }
-// }
-
 function postTrip() {
   event.preventDefault();
+  if (user === undefined)  {
+    window.alert("Please sign in to book this trip.");
+    }
   let userID = user.userID;
   let tripDest = Number(selectedDestinationID);
   let tripTravelers = travelersInput.value;
@@ -290,9 +277,6 @@ function postTrip() {
   let tripDuration = durationInput.value;
   let tripStat = "pending";
   let idPlusOne = (tripsAPI.length + 1);
-  if (!user)  {
-    window.alert("Please sign in to book this trip.");
-    }
   if (!dateInput.value || !durationInput.value || !travelersInput.value || selectedDestinationID === "") {
     window.alert("Whoa, hold up! We're missing something. Please select a destination, date of departure, duration of your trip, and number of travelers in your party.");
   } else if (destinationsToggle === false) {
