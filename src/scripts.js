@@ -23,7 +23,6 @@ import './images/footer-logo.png';
 
 // global variables
 let travelerAPI, tripsAPI, destinationsAPI, user, userID, trip, selectedDestinationID;
-// let inputCounter = 0;
 let destinationsToggle = false;
 
 // query selectors
@@ -35,7 +34,7 @@ const password = document.getElementById("password");
 const submitButton = document.querySelector(".submit-button");
 const bookButton = document.querySelector(".book-button-landing");
 const postButton = document.querySelector(".book-button-booking");
-const formFields = document.getElementsByClassName("form-field");
+const bookingContainer = document.querySelector(".booking-container");
 const dateInput = document.getElementById("date");
 const durationInput = document.getElementById("duration");
 const travelersInput = document.getElementById("travelers");
@@ -57,13 +56,13 @@ dropdownButton.addEventListener("click", () =>
   optionMenu.classList.toggle("active")
 );
 submitButton.addEventListener("click", signIn);
+bookButton.addEventListener("click", snapToBooking);
 destinationsCarousel.addEventListener("dblclick", selectDestination);
 postButton.addEventListener("click", postTrip);
 dateInput.addEventListener("input", displayCostEstimate);
 durationInput.addEventListener("input", displayCostEstimate);
 travelersInput.addEventListener("input", displayCostEstimate);
-locationInput.addEventListener("input", displayCostEstimate);
-bookButton.addEventListener("click", snapToBooking);
+locationInput.addEventListener("change", displayCostEstimate);
 
 // functions
 window.addEventListener('load', () => {
@@ -92,6 +91,8 @@ function getUser() {
     logInMessage.style.display = "none";
   } else if (!username.value || !password.value) {
     window.alert("Whoa, hold up! Please make sure to enter both a username and a password.");
+  } else {
+    window.alert("Something's up here. That username and password were not a match.")
   }
   return userID;
 }
@@ -105,8 +106,6 @@ function fetchUserAPI(userID) {
       (value) => {
         travelerAPI = value;
         user = new User(travelerAPI);
-        console.log(travelerAPI);
-        console.log(user);
       },
     ); 
   return travelerData;
@@ -124,7 +123,7 @@ function loadUserInfo() {
 }
 
 function snapToBooking()  {
-  console.log(user);
+  bookingContainer.scrollIntoView();
 }
 
 function dateHelperDOM(date) {
@@ -146,22 +145,24 @@ function dateHelperPost(date) {
 function selectDestination() {
   if (event.target.className.includes("destinationImage"))  {
     if (destinationsToggle === false) {
-      locationInput.value = event.target.id;
       selectedDestinationID = event.target.id;
-      destinationsToggle = true;
+      locationInput.value = event.target.id;
       event.target.style.border = "4px solid #4F8FFD";
       event.target.style.borderRadius = "10px";
       event.target.style.filter = "grayscale(0)";
       let destinationIndex = [JSON.parse(selectedDestinationID) - 1];
       selectedDestination.innerText = `${destinationsAPI[destinationIndex].destination}`;
+      destinationsToggle = true;
     } else if (destinationsToggle === true)  {
       selectedDestinationID = "";
-      destinationsToggle = false;
+      locationInput.value = "";
       event.target.style.border = "none";
       event.target.style.borderRadius = "0px";
       event.target.style.filter = "grayscale(110)";
+      destinationsToggle = false;
     }
   }
+  displayCostEstimate();
 }
 
 function getCostEstimate()  {
@@ -175,10 +176,10 @@ function getCostEstimate()  {
 }
 
 function displayCostEstimate()  {
-  console.log("fired");
-  if (dateInput.value && durationInput.value && travelersInput.value && locationInput.value) {
+  if (dateInput.value && durationInput.value && travelersInput.value && destinationsToggle) {
+    let destinationIndex = [JSON.parse(selectedDestinationID) - 1];
     costEstimate.style.display = "inline";
-    costEstimate.innerText = `The estimated overall cost for this trip is ${getCostEstimate()}`;
+    costEstimate.innerText = `The estimated overall cost for this trip for ${travelersInput.value} people for ${durationInput.value} days in ${destinationsAPI[destinationIndex].destination} is ${getCostEstimate()}`;
   }
 }
 
