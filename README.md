@@ -54,7 +54,7 @@ Working with APIs and fetched and posted data is also still very new to me, havi
 
 One of my largest challenges (and biggest accomplishments!) with Out There was implementing a third-party carousel library, [Splide JS](https://splidejs.com/). I chose Splide in part because of its excellent user documentation, and in part because of its robust accessibility features including ARIA tagging and keyboard focusability. While I've worked with third-party libraries once before, Splide JS was a large step up in terms of complexity and took a lot of trial and error to implement effectively. 
 
-## Future Development Opportunities
+## Future Development Opportunities 🌎
 Due to time constraints, I was not able to tackle the optional extension for this project that would have incorporated a travel agent login and travel agent view, allowing an agent to approve a user's pending trips. Given more time, establishing that second view via verifying username and displaying pending trips via iterating the tripsAPI data would be an excellent challenge. 
 
 
